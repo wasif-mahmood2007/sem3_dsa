@@ -9,12 +9,9 @@ struct Node
 
 Node* top = NULL;
 
-void push(int value)
+void push(int v)
 {
-    Node* tmp = new Node;
-    tmp->data = value;
-    tmp->next = top;
-
+    Node* tmp = new Node{v, top};
     top = tmp;
 }
 
@@ -22,10 +19,10 @@ void pop()
 {
     if(top == NULL)
     {
-        cout << "Stack Underflow\n";
+        cout << "Stack Underflow.\n";
         return;
     }
-
+    
     Node* tmp = top;
     top = top->next;
     delete tmp;
@@ -35,10 +32,10 @@ int peek()
 {
     if(top == NULL)
     {
-        cout << "Stack is Empty\n";
-        return 0;
+        cout << "Stack is empty.\n";
+        return -1;
     }
-
+    
     return top->data;
 }
 
@@ -46,10 +43,10 @@ void display()
 {
     if(top == NULL)
     {
-        cout << "Stack is Empty\n";
+        cout << "Stack is empty.\n";
         return;
     }
-
+    
     Node* cur = top;
     while(cur != NULL)
     {
@@ -69,6 +66,5 @@ int main()
 
     pop();
     cout << peek() << endl;
-
-    return 0;
+    display();
 }
