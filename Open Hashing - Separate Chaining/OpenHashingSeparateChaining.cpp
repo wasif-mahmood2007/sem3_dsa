@@ -8,91 +8,83 @@ struct Node
 };
 
 const int hashSize = 10;
-Node* HT[hashSize] = {NULL};
+Node* ht[hashSize] = {NULL};
 
-void insert(int value)
+void insert(int v)
 {
-    Node* tmp = new Node;
-    tmp->data = value;
-    tmp->next = NULL;
+    int ind = v % hashSize;
+    Node* tmp = new Node{v, NULL};
 
-    int ind = value % hashSize;
-
-    if(HT[ind] == NULL)
+    if(ht[ind] == NULL)
     {
-        HT[ind] = tmp;
-    }
-    else
-    {
-        Node* cur = HT[ind];
-        while(cur->next != NULL)
-        {
-            cur = cur->next;
-        }
-        cur->next = tmp;
-    }
-}
-
-void deleteNode(int value)
-{
-    int ind = value % hashSize;
-
-    if(HT[ind] == NULL)
-    {
-        cout << value << " not found in the Hashtable." << endl;
+        ht[ind] = tmp;
         return;
     }
-    else if(HT[ind]->data == value)
+    
+    Node* cur = ht[ind];
+    while(cur->next != NULL) cur = cur->next;
+    cur->next = tmp;
+}
+
+void deleteNode(int v)
+{
+    int ind = v % hashSize;
+
+    if(ht[ind] == NULL)
     {
-        Node* tmp = HT[ind];
-        HT[ind] = HT[ind]->next;
+        cout << v << " not found.\n";
+        return;
+    }
+    if(ht[ind]->data == v)
+    {
+        Node* tmp = ht[ind];
+        ht[ind] = ht[ind]->next;
         delete tmp;
-        cout << value << " found and deleted." << endl;
-        return;
-    }
-    else
-    {
-        Node* cur = HT[ind];
-        Node* nxt = HT[ind]->next;
 
-        while(nxt != NULL)
-        {
-            if(nxt->data == value)
-            {
-                cur->next = nxt->next;
-                delete nxt;
-                cout << value << " found and deleted." << endl;
-                return;
-            }
-            cur = cur->next;
-            nxt = nxt->next;
-        }
-        cout << value << " not found." << endl;
+        cout << v << " found and deleted.\n";
         return;
     }
+
+    Node* prev = ht[ind];
+    Node* cur = ht[ind]->next;
+    while(cur != NULL)
+    {
+        if(cur->data == v)
+        {
+            prev->next = cur->next;
+            delete cur;
+
+            cout << v << " found and deleted.\n";
+            return;
+        }
+        prev = prev->next;
+        cur = cur->next;
+    }
+    cout << v << " not found.\n";
+    return;
 }
 
-bool search(int value)
+bool search(int v)
 {
-    int ind = value % hashSize;
+    int ind = v % hashSize;
 
-    if(HT[ind] == NULL)
+    if(ht[ind] == NULL)
     {
-        cout << value << " not found." << endl;
+        cout << v << " not found.\n";
         return false;
     }
 
-    Node* cur = HT[ind];
+    Node* cur = ht[ind];
     while(cur != NULL)
     {
-        if(cur->data == value)
+        if(cur->data == v)
         {
-            cout << value << " found." << endl;
+            cout << v << " found.\n";
             return true;
         }
         cur = cur->next;
     }
-    cout << value << " not found in the Hashtable" << endl;
+    cout << v << " not found.\n";
     return false;
 }
 
@@ -100,8 +92,8 @@ void display()
 {
     for(int i = 0; i < hashSize; i++)
     {
-        cout<< i << ":";
-        for(Node* cur = HT[i]; cur != NULL; cur = cur->next)
+        cout << i << ":";
+        for(Node* cur = ht[i]; cur != NULL; cur = cur->next)
         {
             cout << " " << cur->data;
         }
@@ -133,19 +125,17 @@ int main()
     display();
 
     //search
-    search(84);
+    search(84); //searching not-existant value
     search(54);
     search(3);
 
     //delete
     deleteNode(74);
-    deleteNode(89);
+    deleteNode(89); //deleting not-existant value
     deleteNode(25);
     deleteNode(76);
     deleteNode(3);
-    deleteNode(3);
+    deleteNode(3); //deleting alreading deleted value
     display();
-    search(3);
-
-    return 0;
+    search(3); //searching deleted value
 }
