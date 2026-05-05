@@ -129,6 +129,20 @@ void display()
     cout << endl;
 }
 
+void displayForward(Node* cur)
+{
+    if(cur == NULL) return;
+    cout << cur->data << " ";
+    displayForward(cur->next);
+}
+
+void displayBackward(Node* cur)
+{
+    if(cur == NULL) return;
+    displayBackward(cur->next);
+    cout << cur->data << " ";
+}
+
 int main()
 {  
     insertAtBeginning(47);
