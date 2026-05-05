@@ -10,50 +10,42 @@ struct Node
 Node* front = NULL;
 Node* rear = NULL;
 
-void enqueue(int value)
+void enqueue(int v)
 {
-    Node* tmp = new Node;
-    tmp->data = value;
-    tmp->next = NULL;
+    Node* tmp = new Node{v, NULL};
 
     if(front == NULL)
     {
         front = rear = tmp;
+        return;
     }
-    else
-    {
-        rear->next = tmp;
-        rear = tmp;
-    }
+
+    rear->next = tmp;
+    rear = tmp;
 }
 
 void dequeue()
 {
     if(front == NULL)
     {
-        cout << "Queue Underflow\n";
+        cout << "Queue Underflow.\n";
         return;
     }
-    
+
     Node* tmp = front;
     front = front->next;
     delete tmp;
-
-    if(front == NULL)
-    {
-            rear = NULL;
-    }
-    
+    if(front == NULL) rear = NULL;
 }
 
 int peek()
 {
     if(front == NULL)
     {
-        cout << "Queue is Empty\n";
-        return 0;
+        cout << "Queue is empty.\n";
+        return -1;
     }
-    
+
     return front->data;
 }
 
@@ -61,28 +53,32 @@ void display()
 {
     if(front == NULL)
     {
-        cout << "Queue is Empty\n";
+        cout << "Queue is empty.\n";
         return;
     }
 
-    Node* cur = front;
-    while(cur != NULL)
+    for(Node* cur = front; cur != NULL; cur = cur->next)
     {
         cout << cur->data << " ";
-        cur = cur->next;
     }
     cout << endl;
 }
 
 int main()
 {
+    //Enqueue
     enqueue(10);
     enqueue(20);
     enqueue(30);
     display();
 
+    //Dequeue
     dequeue();
+
+    //Peek
     cout << peek() << endl;
 
-    return 0;
+    dequeue();
+    dequeue();
+    dequeue(); //Dequeue empty queue
 }
