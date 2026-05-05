@@ -6,7 +6,7 @@ struct Edge;
 struct Vertex
 {
     int data;
-    Edge* edgeList = NULL;
+    Edge* edgeList;
     Vertex* next;
 };
 
