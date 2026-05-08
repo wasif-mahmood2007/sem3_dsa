@@ -9,82 +9,96 @@ struct Node
 
 Node* list = NULL;
 
-//Insert a value in the list
-void insert(int value)
+//Insert at Beginning
+void insertAtBeginning(int v)
 {
-    Node* tmp = new Node;
-    tmp->data = value;
-    tmp->next = NULL;
-    
+    Node* tmp = new Node{v, list};
+    list = tmp;
+}
+
+//Insert at End
+void insertAtEnd(int v)
+{
+    Node* tmp = new Node{v, NULL};
+
     if(list == NULL)
     {
         list = tmp;
+        return;
     }
-    else
-    {
-        Node* cur = list;
-        while(cur->next != NULL)
-        {
-            cur = cur->next;
-        }
-        cur->next = tmp;
-    }
+
+    Node* cur = list;
+    while(cur->next != NULL) cur = cur->next;
+    cur->next = tmp;
 }
-//Delete node from the list
-void deleteNode(int value)
+
+//Delete Node
+void deleteNode(int v)
 {
-    if(list == NULL) //if list is empty
+    if(list == NULL)
     {
-        cout << "List is Empty\n";
+        cout << "List is Empty.\n";
+        return;
     }
-    else if(list->data == value) //if required value is in first node
+    if(list->data == v)
     {
         Node* tmp = list;
         list = list->next;
         delete tmp;
+        cout << v << " Deleted.\n";
+        return;
     }
-    else //Searching the further nodes in the list
+
+    Node* prev = list;
+    Node* cur = list->next;
+    while(cur != NULL)
     {
-        Node* cur = list->next;
-        Node* prev = list;
-        while(cur != NULL)
+        if(cur->data == v)
         {
-            if(cur->data == value)
-            {
-                prev->next = cur->next;
-                delete cur;
-                return;
-            }
-            prev = cur;
-            cur = cur->next;
+            prev->next = cur->next;
+            delete cur;
+            cout << v << " Deleted.\n";
+            return;
         }
+        prev = cur;
+        cur = cur->next;
     }
+    cout << "Can't find " << v << ".\n";
 }
-//Search a value in the list
-bool search(int value)
+
+//Search Node
+bool search(int v)
 {
+    if(list == NULL)
+    {
+        cout << "List is Empty.\n";
+        return false;
+    }
+
     Node* cur = list;
     while(cur != NULL)
     {
-        if(cur->data == value)
+        if(cur->data == v)
         {
+            cout << v << " found.\n";
             return true;
         }
         cur = cur->next;
     }
-    
+    cout << "Can't find " << v << ".\n";
     return false;
 }
-//Sort list
+
+//Sort List
 void sort()
 {
     if(list == NULL)
     {
-        cout << "List is Empty\n";
+        cout << "List is Empty.\n";
         return;
     }
 
-    for(Node* i = list; i->next != NULL; i = i->next)
+    for(Node* i = list; i != NULL; i = i->next)
     {
         for(Node* j = i->next; j != NULL; j = j->next)
         {
@@ -97,9 +111,16 @@ void sort()
         }
     }
 }
-//Display list
+
+//Display List
 void display()
 {
+    if(list == NULL)
+    {
+        cout << "List is Empty.\n";
+        return;
+    }
+
     Node* cur = list;
     while(cur != NULL)
     {
@@ -108,15 +129,17 @@ void display()
     }
     cout << endl;
 }
-//Display forward using recursion
+
+//Display Forward using recursion
 void displayForward(Node* cur)
 {
     if(cur == NULL) return;
     cout << cur->data << " ";
     displayForward(cur->next);
 }
-//Display backward using recursion
-void displayBackward(Node* cur) 
+
+//Display Backward using recursion
+void displayBackward(Node* cur)
 {
     if(cur == NULL) return;
     displayBackward(cur->next);
@@ -126,22 +149,17 @@ void displayBackward(Node* cur)
 int main()
 {
     //LinkList test
-    insert(12);
-    insert(25);
-    insert(72);
-    insert(57);
-    insert(2);
+    insertAtBeginning(12);
+    insertAtEnd(25);
+    insertAtBeginning(72);
+    insertAtEnd(57);
+    insertAtBeginning(2);
     display();
     cout << endl;
 
     //Search test
-    if(search(2)){
-        cout << "Found.\n";
-    }
-    else
-    {
-        cout << "Doesn't Exist.\n";
-    }
+    search(2);
+    search(35);
     cout << endl;
 
     //Sort test
