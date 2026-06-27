@@ -14,10 +14,7 @@ void insertAtBeginning(int v)
 {
     Node* tmp = new Node{v, NULL, head};
 
-    if(head != NULL)
-    {
-        head->prev = tmp;
-    }
+    if(head != NULL) head->prev = tmp;
     head = tmp;
 }
 
@@ -30,59 +27,37 @@ void insertAtEnd(int v)
         head = tmp;
         return;
     }
-    else
-    {
-        Node* cur = head;
-        while(cur->next != NULL)
-        {
-            cur = cur->next;
-        }
-        cur->next = tmp;
-        tmp->prev = cur;
-    }
+    
+    Node* cur = head;
+    while(cur->next != NULL) cur = cur->next;
+    tmp->prev = cur;
+    cur->next = tmp;
 }
 
 void deleteNode(int v)
 {
-    if(head == NULL)
-    {
-        cout << "List is empty." << endl;
-        return;
-    }
-    else if(head->data == v)
+    if(head == NULL) return;
+    if(head->data == v)
     {
         Node* tmp = head;
         head = head->next;
-        if(head != NULL)
-        {
-            head->prev = NULL;
-        }
+        if(head != NULL) head->prev = NULL;
         delete tmp;
-        cout << v << " deleted successfully." << endl;
         return;
     }
-    else
+
+    Node* cur = head->next;
+    while(cur != NULL)
     {
-        Node* cur = head->next;
-        while(cur != NULL && cur->data != v)
+        if(cur->data == v)
         {
-            cur = cur->next;
-        }
-        if(cur == NULL)
-        {
-            cout << v << " not found." << endl;
+            Node* prev = cur->prev;
+            prev->next = cur->next;
+            if(prev->next != NULL) prev->next->prev = prev;
+            delete cur;
             return;
         }
-
-        Node* prev = cur->prev;
-        prev->next = cur->next;
-        if(prev->next != NULL)
-        {
-            prev->next->prev = prev;
-        }
-        delete cur;
-        cout << v << " deleted successfully." << endl;
-        return;
+        cur = cur->next;
     }
 }
 
@@ -91,24 +66,21 @@ bool search(int v)
     Node* cur = head;
     while(cur != NULL)
     {
-        if(cur->data == v)
-        {
-            cout << v << " found successfully." << endl;
-            return true;
-        }
+        if(cur->data == v) return true;
         cur = cur->next;
     }
-    cout << v << " not found." << endl;
     return false;
 }
 
 void sort()
 {
+    if(head == NULL) return;
+
     for(Node* i = head; i != NULL; i = i->next)
     {
         for(Node* j = i->next; j != NULL; j = j->next)
         {
-            if(j->data < i->data)
+            if(i->data > j->data)
             {
                 int tmp = i->data;
                 i->data = j->data;
@@ -155,8 +127,9 @@ int main()
 
     deleteNode(6);
     deleteNode(8);
-    search(32);
-    search(0);
+    display();
+    cout << search(32) << endl;
+    cout << search(0) << endl;
 
     sort();
     display();
