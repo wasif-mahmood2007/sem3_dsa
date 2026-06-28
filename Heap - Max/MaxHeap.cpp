@@ -2,116 +2,110 @@
 using namespace std;
 
 const int MAX = 100;
-int arr[MAX];
+int heap[MAX];
 int heapSize = 0;
 
-void upHeapify(int arr[], int ind)
+void upheapify(int heap[], int ind)
 {
     if(ind == 0) return;
 
     int parent = (ind - 1) / 2;
-    if(arr[parent] < arr[ind])
+    if(heap[parent] < heap[ind])
     {
-        swap(arr[parent], arr[ind]);
-        upHeapify(arr, parent);
-    }
-}
-
-void downHeapify(int arr[], int ind, int size)
-{
-    int left = ind * 2 + 1;
-    int right = ind * 2 + 2;
-
-    if(left >= size) return;
-
-    int largest = ind;
-    if(left < size && arr[left] > arr[largest]) largest = left;
-    if(right < size && arr[right] > arr[largest]) largest = right;
-
-    if(largest != ind)
-    {
-        swap(arr[ind], arr[largest]);
-        downHeapify(arr, largest, size);
+        swap(heap[parent], heap[ind]);
+        upheapify(heap, parent);
     }
 }
 
 void insert(int v)
 {
-    if(heapSize == MAX)
-    {
-        cout << "Heap's full.\n";
-        return;
-    }
+    if(heapSize == MAX) return;
 
-    arr[heapSize] = v;
-    upHeapify(arr, heapSize);
+    heap[heapSize] = v;
+    upheapify(heap, heapSize);
     heapSize++;
+}
+
+void downheapify(int heap[], int ind, int heapSize)
+{
+    int left = ind * 2 + 1;
+    int right = ind * 2 + 2;
+    if(left >= heapSize) return;
+
+    int largest = ind;
+    if(left < heapSize && heap[left] > heap[largest]) largest = left;
+    if(right < heapSize && heap[right] > heap[largest]) largest = right;
+
+    if(largest != ind)
+    {
+        swap(heap[ind], heap[largest]);
+        downheapify(heap, largest, heapSize);
+    }
 }
 
 void deleteRoot()
 {
-    if(heapSize == 0)
-    {
-        cout << "Heap's empty.\n";
-        return;
-    }
+    if(heapSize == 0) return;
 
-    swap(arr[0], arr[heapSize - 1]);
     heapSize--;
-    downHeapify(arr, 0, heapSize);
+    swap(heap[0], heap[heapSize]);
+    downheapify(heap, 0, heapSize);
 }
 
 bool search(int v)
 {
-    if(heapSize == 0)
-    {
-        cout << "Heap's empty.\n";
-        return false;
-    }
-
     for(int i = 0; i < heapSize; i++)
     {
-        if(arr[i] == v)
-        {
-            cout << v << " found.\n";
-            return true;
-        }
+        if(heap[i] == v) return true;
     }
-    cout << v << " not found.\n";
     return false;
 }
 
 void heapSort()
 {
-    //copy original array
     int tmp[MAX];
     int tmpSize = heapSize;
-    for(int i = 0; i < heapSize; i++) tmp[i] = arr[i];
+    for(int i = 0; i < heapSize; i++) tmp[i] = heap[i];
 
     for(int i = tmpSize - 1; i > 0; i--)
     {
         swap(tmp[0], tmp[i]);
-        downHeapify(tmp, 0, i);
+        downheapify(tmp, 0, i);
     }
 
     cout << "Sorted:";
-    for(int i = 0; i < tmpSize; i++)
-    {
-        cout << " " << tmp[i];
-    }
+    for(int i = 0; i < tmpSize; i++) cout << " " << tmp[i];
     cout << endl;
 }
 
 void display()
 {
-    if(heapSize == 0)
-    {
-        cout << "Heap's empty.\n";
-        return;
-    }
+    if(heapSize == 0) return;
 
-    for(int i = 0; i < heapSize; i++) cout << arr[i] << " ";
+    for(int i = 0; i < heapSize; i++) cout << heap[i] << " ";
     cout << endl;
+}
+
+void displayLevels()
+{
+    if(heapSize == 0) return;
+
+    int levelNodes = 1;
+    int count = 0;
+
+    for(int i = 0; i < heapSize; i++)
+    {
+        cout << heap[i] << " ";
+        
+        count++;
+        if(count == levelNodes)
+        {
+            cout << endl;
+            levelNodes *= 2;
+            count = 0;
+        }
+    }
+    if(count != 0) cout << endl;
 }
 
 int main()
@@ -121,16 +115,15 @@ int main()
     insert(30);
     insert(10);
     insert(50);
+    insert(75);
 
-    display();
+    displayLevels();
 
     deleteRoot();
     display();
 
-    search(30);
-    search(99);
+    cout << search(30) << endl;
+    cout << search(40) << endl;
 
     heapSort();
-
-    display();
 }
