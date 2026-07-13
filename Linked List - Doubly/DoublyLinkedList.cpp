@@ -90,6 +90,25 @@ void sort()
     }
 }
 
+void reverse()
+{
+    if(head == NULL) return;
+
+    Node* cur = head;
+    Node* tmp = NULL;
+
+    while(cur != NULL)
+    {
+        tmp = cur->prev;
+        cur->prev = cur->next;
+        cur->next = tmp;
+
+        cur = cur->prev;
+    }
+
+    if(tmp != NULL) head = tmp->prev;
+}
+
 void display()
 {
     Node* cur = head;
