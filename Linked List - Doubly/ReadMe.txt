@@ -7,5 +7,6 @@ Insert at End
 Delete Node
 Search Node
 Sort List
+Reverse List
 Display List
 Display Forward and Backward using Recursion
